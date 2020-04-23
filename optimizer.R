@@ -33,7 +33,8 @@ optimizer=function(agDf,bwPlus, bwMinus,tssWin, densityWin){
       next
     }
   }
-
+  #create column for tssPeak
+  agDf$tssPeak=NA
   #-------------loop through sections-------------#
   #create result df:
   ##  gene, bpLoc,
@@ -84,19 +85,16 @@ optimizer=function(agDf,bwPlus, bwMinus,tssWin, densityWin){
       '\ndone\n','#----------------#\n',sep='')
       next
     }
-    #create column for tssPeak
-    agDf$tssPeak=NA
+
     agDfSecPeaks=peakFinder(agDfSec,bwPlus, bwMinus, tssWin, densityWin)
      cat('\ndone\n','#----------------#\n',sep='')
     agDfSec=decisionTree(agDfSec,agDfSecPeaks,bwPlus,bwMinus,tssWin,densityWin)
+##-------------append section data to ultimate df-------------##
     for(j in 1:nrow(agDfSec)){
-
-      tGene=as.character(agDfSec$gene[j])
-      tmpRow=c(tGene,1)
       agDf[agDf$gene==agDfSec$gene[j],]$tssPeak=agDfSec$tssPeak[j]
-      #resultDf=rbind(resultDf,tmpRow)
+
     }
-    ##-------------append section data to ultimate df-------------##
+
   }
 
   #result is a data frame
