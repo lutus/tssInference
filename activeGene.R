@@ -107,12 +107,12 @@ activeGene = function(bwPlus, bwMinus, bed, tssWin){
     if(gStart!=gEnd){
       if(gStrand=='+'){
         gRegion=region.bpQuery.bigWig(bwPlus,start=gStart-tssWin,
-                                  end=gEnd,
+                                  end=gEnd+tssWin,
                                   chrom=gChrom)
                                 }
       if(gStrand=='-'){
         gRegion=region.bpQuery.bigWig(bwMinus,start=gStart-tssWin,
-                                    end=gEnd,
+                                    end=gEnd+tssWin,
                                     chrom=gChrom)
                                 }}
     else if(gStart==gEnd){gRegion=0}
