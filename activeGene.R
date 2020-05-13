@@ -14,7 +14,8 @@ activeGene = function(bwPlus, bwMinus, bed, tssWin){
   #bwPlus: bigWig file for the plus strand
   #bwMinus: bigWig file for the minus strand
   #tssWin: integer number of bp to look at beforegene start
-  cat('Debugging',sep='')
+
+  #cat('Debugging',sep='')
   # list unique genes in bed file
   gene=unique(bed$gene)
   # initiate empty vectors
@@ -126,12 +127,18 @@ activeGene = function(bwPlus, bwMinus, bed, tssWin){
     }
 
   }
-  # if(length(gWarnings)>0){
-  #   warnings=append(warningFlag,TRUE)
-  # }
-  # else if(length(gWarnings)==0){
-  #   warnings=append(warningFlag,FALSE)
-  # }
-  return(data.frame(gene,chrom,start,end,strand,
-    active,plusCnt, minusCnt, region,stringsAsFactors = FALSE))
+  dfReturn=data.frame(gene,chrom,start,end,strand,
+    active,plusCnt, minusCnt, region,stringsAsFactors = FALSE)
+  #add evaluate column
+  dfReturn['evaluate']=TRUE
+  #add geneWin length of bp in gene window
+  dfReturn['geneWin']=dfReturn$end-dfReturn$start
+
+  #remove unwanted genes from being evaluated
+  dfReturn$evaluate[dfReturn$active==FALSE]=FALSE
+  dfReturn$evaluate[(dfReturn$strand!='+'&dfReturn$strand!='-')]=FALSE
+  dfReturn$evaluate[dfReturn$geneWin>2500000]=FALSE
+
+  #return dataframe
+  return(dfReturn)
 }
